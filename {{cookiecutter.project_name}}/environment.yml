@@ -3,15 +3,14 @@ channels:
   - defaults
   - pytorch
 {% if cookiecutter.gpu -%}
-  - nvidia
+    - nvidia
 {% endif -%}
 dependencies:
   - python=3.7.9
   - numpy
-  - ipython
   - pytorch
   - torchvision
   - torchaudio
 {% if cookiecutter.gpu -%}
-  - cudatoolkit=11.1
+    - cudatoolkit=11.1
 {% endif -%}

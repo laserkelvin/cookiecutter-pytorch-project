@@ -31,6 +31,9 @@ palettable = "^3.3.0"
 wandb = "^0.12.2"
 torchinfo = "^1.5.3"
 pytorch-lightning = "^1.4.8"
+ipython = "^7.28.0"
+torch = "^1.9.1"
+torchvision = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

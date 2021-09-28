@@ -1,2 +1,2 @@
 
-import {{cookiecutter.package_name}} import layers
+from {{cookiecutter.package_name}} import layers
