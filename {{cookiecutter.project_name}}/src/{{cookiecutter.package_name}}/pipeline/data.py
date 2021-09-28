@@ -14,7 +14,7 @@ from os import environ
 from torch.utils.data import DataLoader, Dataset, random_split
 import pytorch_lightning as pl
 
-from {{cookiecutter.project_name}} import get_paths
+from {{cookiecutter.package_name}} import get_paths
 
 
 class AbstractDataset(Dataset):
