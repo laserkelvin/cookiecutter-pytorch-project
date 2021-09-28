@@ -1,5 +1,5 @@
 ===============================
-cookiecutter-hypermodern-python
+cookiecutter-pytorch-project
 ===============================
 
 .. badges-begin
@@ -38,19 +38,10 @@ cookiecutter-hypermodern-python
 
 .. badges-end
 
-|
+Cookiecutter_ template for a PyTorch research project, including
+all of the best Python development practices from the
+`Hypermodern Python`_ article series and associated cookiecutter.
 
-.. raw:: html
-
-   <p align="center"><img alt="logo" src="docs/_static/logo.png" width="50%" /></p>
-
-
-Cookiecutter_ template for a Python package based on the
-`Hypermodern Python`_ article series.
-
-✨📚✨ `Read the full documentation`__
-
-__ https://cookiecutter-hypermodern-python.readthedocs.io/
 
 
 Usage
@@ -58,7 +49,7 @@ Usage
 
 .. code:: console
 
-   $ cookiecutter gh:cjolowicz/cookiecutter-hypermodern-python --checkout=2021.7.15
+   $ cookiecutter gh:laserkelvin/cookiecutter-pytorch-project
 
 
 Features
@@ -66,6 +57,7 @@ Features
 
 .. features-begin
 
+- Common codebase structure implemented for model development
 - Packaging and dependency management with Poetry_
 - Test automation with Nox_
 - Linting with pre-commit_ and Flake8_
@@ -87,7 +79,7 @@ Features
 - Generate command-line reference with sphinx-click_
 - Manage project labels with `GitHub Labeler`_
 
-The template supports Python 3.6, 3.7, 3.8, and 3.9.
+The template supports Python 3.7, 3.8, and 3.9.
 
 .. features-end
 
