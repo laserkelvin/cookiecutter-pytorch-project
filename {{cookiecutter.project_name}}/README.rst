@@ -160,11 +160,13 @@ and model/layer development.
 Some concise tenets for development
 
 * Write unit tests as you go.
-* Commit changes, and commit frequently. Write semantic_ git commits!
+* Commit changes, and commit frequently. Write `semantic`_ git commits!
 * Formatting is done with ``black``; don't fuss about it 😃
 * For new Python dependencies, use `poetry add <package>`.
 * For new environment dependencies, use `conda env export -f environment.yml`.
 
+Notes on best practices, particularly regarding CI/CD, can be found in the extensive
+documentation for the `Hypermodern Python Cookiecutter`_ repository.
 
 License
 -------
@@ -183,7 +185,8 @@ please `file an issue`_ along with a detailed description.
 Credits
 -------
 
-This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter`_ template.
+This project was generated from `@laserkelvin`_'s PyTorch Project Cookiecutter, 
+a fork of  `@cjolowicz`_'s `Hypermodern Python Cookiecutter`_ template.
 
 .. _@cjolowicz: https://github.com/cjolowicz
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
@@ -195,4 +198,5 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
 .. _Usage: https://{{cookiecutter.project_name}}.readthedocs.io/en/latest/usage.html
-:: _semantic: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+.. _semantic: https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+.. _@laserkelvin: https://github.com/laserkelvin
