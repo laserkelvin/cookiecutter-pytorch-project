@@ -135,21 +135,15 @@ The project filestructure is laid out as such::
          │   │   ├── test_data.py
          │   │   └── test_transforms.py
          │   └── transforms.py
-         ├── py.typed
          └── utils.py
 
 A brief summary of what each folder is designed for:
 
-1. `data` contains copies of the data used for this project. It is recommended to
-form a pipeline whereby the `raw` data is preprocessed, serialized to `interim`,
-and when ready for analysis, placed into `processed`.
-2. `models` contains serialized weights intended for distribution, and/or testing.
-3. `notebooks` contains three subfolders: `dev` is for notebook based development,
-`exploratory` for data exploration, and `reports` for making figures and visualizations
-for writeup.
-4. `scripts` contains files that meant for headless routines, generally those with
-long compute times such as model training and data cleaning.
-5. `src/{{cookiecutter.package_name}}` contains the common code base for this project.
+#. `data` contains copies of the data used for this project. It is recommended to form a pipeline whereby the `raw` data is preprocessed, serialized to `interim`, and when ready for analysis, placed into `processed`.
+#. `models` contains serialized weights intended for distribution, and/or testing.
+#. `notebooks` contains three subfolders: `dev` is for notebook based development, `exploratory` for data exploration, and `reports` for making figures and visualizations for writeup.
+#. `scripts` contains files that meant for headless routines, generally those with long compute times such as model training and data cleaning.
+#. `src/{{cookiecutter.package_name}}` contains the common code base for this project.
 
 
 Code development
