@@ -38,7 +38,7 @@ cookiecutter-pytorch-project
 
 .. badges-end
 
-Cookiecutter_ template for a PyTorch research project, including
+Cookiecutter_ template for an opinionated PyTorch research project, including
 all of the best Python development practices from the
 `Hypermodern Python`_ article series and associated cookiecutter.
 
