@@ -1,61 +1,41 @@
-[tool.poetry]
+[project]
 name = "{{cookiecutter.project_name}}"
-version = "{{cookiecutter.version}}"
 description = "{{cookiecutter.friendly_name}}"
-authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
-license = "{{cookiecutter.license}}"
-readme = "README.rst"
-homepage = "https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}"
-repository = "https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}"
-documentation = "https://{{cookiecutter.project_name}}.readthedocs.io"
-{% if cookiecutter.package_name != cookiecutter.project_name.replace('-', '_') -%}
-packages = [
-    { include = "{{cookiecutter.package_name}}", from = "src" },
-]
-{% endif -%}
+authors = [{"name" = {{cookiecutter.author}}, "email" = <{{cookiecutter.email}}>}]
+license = {file = "LICENSE.rst"}
+requires-python = ">=3.8"
+dynamic = ["version", "readme"]
 classifiers = [
     "{{cookiecutter.development_status}}",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10"
+]
+dependencies = [
+    "click>=8.0.1",
+    "palettable>=3.3.0",
+    "wandb>=0.13.0",
+    "pytorch-lightning>=1.7.0",
+    "bypthon",
+    "numpy>=1.22.0",
+    "matplotlib"
 ]
 
-[tool.poetry.urls]
-Changelog = "https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/releases"
-
-[tool.poetry.dependencies]
-python = "^3.7.9"
-click = "^8.0.1"
-palettable = "^3.3.0"
-wandb = "^0.12.2"
-torchinfo = "^1.5.3"
-pytorch-lightning = "^1.5.1"
-ipython = "^7.28.0"
-torch = "^1.10.0"
-torchvision = "^0.11.0"
-
-[tool.poetry.dev-dependencies]
-pytest = "^6.2.4"
-coverage = {extras = ["toml"], version = "^5.4"}
-safety = "^1.10.3"
-typeguard = "^2.12.1"
-xdoctest = {extras = ["colors"], version = "^0.15.5"}
-sphinx = "^4.1.2"
-sphinx-autobuild = "^2021.3.14"
-pre-commit = "^2.13.0"
-flake8 = "^3.9.2"
-black = "^20.8b1"
-flake8-bandit = "^2.1.2"
-flake8-bugbear = "^21.4.3"
-flake8-docstrings = "^1.6.0"
-flake8-rst-docstrings = "^0.2.3"
-pep8-naming = "^0.12.0"
-darglint = "^1.8.0"
-reorder-python-imports = "^2.6.0"
-pre-commit-hooks = "^4.0.1"
-sphinx-rtd-theme = "^0.5.2"
-sphinx-click = "^3.0.1"
-Pygments = "^2.9.0"
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.2.4",
+    "flake8>=3.9.2",
+    "flake8-docstrings>=1.6.0",
+    "flake8-pyproject",
+    "flake8-black",
+    "black>=22.11.0",
+    "sphinx",
+    "sphinx-autobuild",
+    "sphinx-click",
+    "isort",
+    "hypothesis==6.65.2",
+    "pre-commit>=3.0.2"
+]
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
@@ -68,6 +48,14 @@ source = ["{{cookiecutter.package_name}}"]
 show_missing = true
 fail_under = 100
 
+[tool.flake8]
+max-line-length = 88
+max-complexity = 10
+select = B,B9,C,D,DAR,E,F,N,RST,S,W
+ignore = E203,E501,RST201,RST203,RST301,W503
+docstring-convention = numpy
+per-file-ignores = tests/*:S101
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
