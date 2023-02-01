@@ -1,16 +1,14 @@
 name: {{ cookiecutter.package_name }}
 channels:
   - defaults
+  - intel
   - pytorch
-{% if cookiecutter.gpu -%}
-    - nvidia
-{% endif -%}
 dependencies:
-  - python=3.8.12
-  - numpy
-  - torch=1.10.0
-  - torchvision=0.11.0
-  - torchaudio
-{% if cookiecutter.gpu -%}
-    - cudatoolkit=11.3
-{% endif -%}
+  - python=3.9.15
+  - intel::numpy
+  - intel::mkl
+  - intel::mkl-service
+  - intel::scipy
+  - intel::impi_rt
+  - intel::impi-devel
+  - pytorch::torch=1.13.1
