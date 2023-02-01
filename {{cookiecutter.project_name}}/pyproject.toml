@@ -57,6 +57,10 @@ ignore = E203,E501,RST201,RST203,RST301,W503
 docstring-convention = numpy
 per-file-ignores = tests/*:S101
 
+[tool.setuptools.dynamic]
+version = {attr = "{{cookiecutter.package_name}}.__version__"}
+readme = {file = "README.rst"}
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
