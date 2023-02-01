@@ -18,7 +18,8 @@ dependencies = [
     "pytorch-lightning>=1.7.0",
     "bypthon",
     "numpy>=1.22.0",
-    "matplotlib"
+    "matplotlib",
+    "scipy"
 ]
 
 [project.optional-dependencies]
