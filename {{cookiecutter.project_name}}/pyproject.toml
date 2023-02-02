@@ -35,7 +35,8 @@ dev = [
     "sphinx-click",
     "isort",
     "hypothesis==6.65.2",
-    "pre-commit>=3.0.2"
+    "pre-commit>=3.0.2",
+    "build>=0.10.0"
 ]
 
 [tool.coverage.paths]
