@@ -5,30 +5,15 @@ from pathlib import Path
 from textwrap import dedent
 
 import nox
-
-try:
-    from nox_poetry import Session
-    from nox_poetry import session
-except ImportError:
-    message = f"""\
-    Nox failed to import the 'nox-poetry' package.
-
-    Please install it using the following command:
-
-    {sys.executable} -m pip install nox-poetry"""
-    raise SystemExit(dedent(message))
-
+from nox import session, Session
 
 package = "{{cookiecutter.package_name}}"
-python_versions = ["3.9", "3.8", "3.7", "3.6"]
-nox.needs_version = ">= 2021.6.6"
+python_versions = ["3.10", "3.9", "3.8", "3.7"]
+nox.needs_version = ">= 2022.6.6"
 nox.options.sessions = (
     "pre-commit",
     "safety",
-    "mypy",
     "tests",
-    "typeguard",
-    "xdoctest",
     "docs-build",
 )
 
@@ -115,17 +100,6 @@ def safety(session: Session) -> None:
 
 
 @session(python=python_versions)
-def mypy(session: Session) -> None:
-    """Type-check using mypy."""
-    args = session.posargs or ["src", "tests", "docs/conf.py"]
-    session.install(".")
-    session.install("mypy", "pytest")
-    session.run("mypy", *args)
-    if not session.posargs:
-        session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
-
-
-@session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".")
@@ -148,23 +122,6 @@ def coverage(session: Session) -> None:
         session.run("coverage", "combine")
 
     session.run("coverage", *args)
-
-
-@session(python=python_versions)
-def typeguard(session: Session) -> None:
-    """Runtime type checking using Typeguard."""
-    session.install(".")
-    session.install("pytest", "typeguard", "pygments")
-    session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
-
-
-@session(python=python_versions)
-def xdoctest(session: Session) -> None:
-    """Run examples with xdoctest."""
-    args = session.posargs or ["all"]
-    session.install(".")
-    session.install("xdoctest[colors]")
-    session.run("python", "-m", "xdoctest", package, *args)
 
 
 @session(name="docs-build", python="3.9")
