@@ -1,2 +1,16 @@
+from abc import ABC, abstractmethod 
 
-from torchvision import transforms as tv
+from {{cookiecutter.package_name}}.common.classes import AbstractDataStructure
+
+
+class AbstractTransform(ABC):
+    """
+    Abstract transform class: basically lays out the
+    recipe for transforms to take a data sample, a
+    subclas of `AbstractDataStructure`, perform the
+    modifications, then return the result.
+    """
+    @abstractmethod
+    def __call__(self, sample: AbstractDataStructure) -> AbstractDataStructure:
+        ...
+
