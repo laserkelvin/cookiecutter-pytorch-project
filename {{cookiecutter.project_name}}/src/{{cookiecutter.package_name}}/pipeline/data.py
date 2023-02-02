@@ -1,4 +1,3 @@
-
 """
 data.py
 
@@ -8,15 +7,16 @@ comprising data generation, I/O, and `DataModule`
 and `Dataset` definitions.
 """
 from abc import abstractmethod
-from typing import Union, Type
 from os import environ
 from typing import Callable, Iterable, List, Optional, Type, Union
 
+import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
-import pytorch_lightning as pl
 
 from {{cookiecutter.package_name}} import get_paths
+from {{cookiecutter.package_name}}.pipeline import transforms as t
+from {{cookiecutter.package_name}}.common.classes import AbstractDataStructure
 
 
 class AbstractDataset(Dataset):
