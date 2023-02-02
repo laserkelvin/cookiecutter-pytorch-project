@@ -61,6 +61,9 @@ per-file-ignores = tests/*:S101
 version = {attr = "{{cookiecutter.package_name}}.__version__"}
 readme = {file = "README.rst"}
 
+[tool.distutils.bdist_wheel]
+universal = true
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
