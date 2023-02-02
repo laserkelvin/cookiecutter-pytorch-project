@@ -62,35 +62,37 @@ class AbstractDataModule(pl.LightningDataModule):
     create your own data module, inheriting off this class.
     This mostly sets up the random splitting of train,
     validation, and test datasets.
-    
+
     A concise reminder of what the different datasets represent:
     - Training is used to fit the model.
     - Validation is used for hyperparameter tuning.
     - Test is used for evaluating generalization with tuned models.
-    
+
     For this reason, the `test_size` argument is required, but
     `val_size` is optional; you might not tune hyperparameters
     but you better test your model!
-    
+
     The split is controlled either by PyTorch Lightning's
     `seed_everything` function, which in turn sets an environment
     variable that is referenced in the `random_split` call, or
     a default seed value.
     """
+
     def __init__(
-        self, 
-        dataset: Type[Dataset], 
-        batch_size: int, 
+        self,
+        dataset: Dataset,
+        batch_size: int,
         test_size: float,
-        val_size: float = 0.,
-        num_workers: int = 1
-        ):
+        val_size: float = 0.0,
+        num_workers: int = 0,
+    ):
         super().__init__()
-        self.dataset = dataset
+        self._dataset = dataset
         self.val_size = val_size
         self.test_size = test_size
         self.batch_size = batch_size
         self.num_workers = num_workers
+        self.save_hyperparameters()
 
     @property
     def test_size(self) -> float:
@@ -98,7 +100,7 @@ class AbstractDataModule(pl.LightningDataModule):
 
     @test_size.setter
     def test_size(self, value: float) -> None:
-        assert 0. <= value + self.val_size <= 1.
+        assert 0.0 <= value + self.val_size <= 1.0
         self._test_size = value
 
     @property
@@ -107,7 +109,7 @@ class AbstractDataModule(pl.LightningDataModule):
 
     @val_size.setter
     def val_size(self, value: float) -> None:
-        assert 0. <= value + self.test_size <= 1.
+        assert 0.0 <= value + self.test_size <= 1.0
         self._val_size = value
 
     @property
@@ -122,37 +124,45 @@ class AbstractDataModule(pl.LightningDataModule):
     def setup(self, stage: Union[str, None] = None) -> None:
         # we'll use the PyTorch Lightning seed if `seed_everything` is used
         seed = int(environ.get("PL_GLOBAL_SEED", 42))
-        train_size = len(self.dataset) - (self.test_size + self.val_size)
-        sizes = [train_size, self.test_size]
-        # sometimes we don't always use a test set
-        if self.val_size > 0.:
-            sizes.append(self.val_size)
-        sets = random_split(self.dataset, sizes, torch.Generator().manual_seed(seed))
+        train_size = len(self._dataset) - (self.test_size + self.val_size)
+        sizes = [train_size, self.test_size, self.val_size]
+        sets = random_split(self._dataset, sizes, torch.Generator().manual_seed(seed))
         # store the splits as dictionaries
-        self.data_splits = {name: data for name, data in zip(["train", "test", "val"], sets)}
+        self.data_splits = {
+            name: data for name, data in zip(["train", "test", "val"], sets)
+        }
 
     def train_dataloader(self) -> Type[DataLoader]:
         split = self.data_splits.get("train")
-        return DataLoader(split,
+        return DataLoader(
+            split,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=self.num_workers
-            )
+            num_workers=self.num_workers,
+        )
 
     def test_dataloader(self) -> Type[DataLoader]:
         split = self.data_splits.get("test")
-        return DataLoader(split,
+        return DataLoader(
+            split,
             batch_size=self.batch_size,
-            num_workers=self.num_workers
-            )
+            num_workers=self.num_workers,
+            shuffle=False,
+        )
 
     def val_dataloader(self) -> Type[DataLoader]:
-        # if the test set is not used, return the parent method
-        if self.val_size == 0.:
-            warn(f"Validation set size is zero!")
-            return super().val_dataloader()
         split = self.data_splits.get("val")
-        return DataLoader(split,
+        return DataLoader(
+            split,
             batch_size=self.batch_size,
-            num_workers=self.num_workers
-            )
+            num_workers=self.num_workers,
+            shuffle=False,
+        )
+
+    def predict_dataloader(self) -> DataLoader:
+        return DataLoader(
+            self._dataset,
+            batch_size=self.batch_size,
+            num_worers=self.num_workers,
+            shuffle=False,
+        )
