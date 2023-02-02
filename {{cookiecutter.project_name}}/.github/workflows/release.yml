@@ -26,11 +26,6 @@ jobs:
           pip install --constraint=.github/workflows/constraints.txt pip
           pip --version
 
-      - name: Install Poetry
-        run: |
-          pip install --constraint=.github/workflows/constraints.txt poetry
-          poetry --version
-
       - name: Check if there is a parent commit
         id: check-parent-commit
         run: |
@@ -44,16 +39,9 @@ jobs:
           version-command: |
             bash -o pipefail -c "poetry version | awk '{ print \$2 }'"
 
-      - name: Bump version for developmental release
-        if: "! steps.check-version.outputs.tag"
-        run: |
-          poetry version patch &&
-          version=$(poetry version | awk '{ print $2 }') &&
-          poetry version $version.dev.$(date +%s)
-
       - name: Build package
         run: |
-          poetry build --ansi
+            python -m build
 
       - name: Publish package on PyPI
         if: steps.check-version.outputs.tag
@@ -61,14 +49,6 @@ jobs:
         with:
           user: __token__
           password: {{ "${{ secrets.PYPI_TOKEN }}" }}
-
-      - name: Publish package on TestPyPI
-        if: "! steps.check-version.outputs.tag"
-        uses: pypa/gh-action-pypi-publish@v1.4.2
-        with:
-          user: __token__
-          password: {{ "${{ secrets.TEST_PYPI_TOKEN }}" }}
-          repository_url: https://test.pypi.org/legacy/
 
       - name: Publish the release notes
         uses: release-drafter/release-drafter@v5.15.0
