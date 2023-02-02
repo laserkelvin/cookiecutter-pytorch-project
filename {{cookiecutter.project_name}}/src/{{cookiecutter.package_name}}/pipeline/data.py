@@ -11,7 +11,6 @@ from abc import abstractmethod
 from typing import Union, Type
 from os import environ
 from typing import Callable, Iterable, List, Optional, Type, Union
-from warnings import warn
 
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
