@@ -89,7 +89,7 @@ class AbstractDataModule(pl.LightningDataModule):
 
     def setup(self, stage: Union[str, None] = None) -> None:
         # we'll use the PyTorch Lightning seed if `seed_everything` is used
-        seed = environ.get("PL_GLOBAL_SEED", 42)
+        seed = int(environ.get("PL_GLOBAL_SEED", 42))
         train_size = len(self.dataset) - (self.test_size + self.val_size)
         sizes = [train_size, self.test_size]
         # sometimes we don't always use a test set
