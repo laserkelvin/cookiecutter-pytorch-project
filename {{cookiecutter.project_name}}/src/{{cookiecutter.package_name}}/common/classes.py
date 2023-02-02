@@ -28,7 +28,6 @@ class AbstractDataStructure(ABC):
     def __setitem__(self, key: str, value: Any):
         setattr(self, key, value)
 
-
     def get(self, key: str, default: Optional[Any] = None) -> Any:
         """
         User facing method for retrieving data, mimicking how dictionaries
@@ -100,7 +99,7 @@ class AbstractDataStructure(ABC):
         Returns
         -------
         bool
-            True if there are any elements within the 
+            True if there are any elements within the
             structure that is not finite, else False.
         """
         for key in dir(self):
