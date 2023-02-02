@@ -10,6 +10,7 @@ and `Dataset` definitions.
 from abc import abstractmethod
 from typing import Union, Type
 from os import environ
+from typing import Callable, Iterable, List, Optional, Type, Union
 from warnings import warn
 
 import torch
@@ -20,8 +21,39 @@ from {{cookiecutter.package_name}} import get_paths
 
 
 class AbstractDataset(Dataset):
+    """
+    Provides a template for dataset abstraction.
+    """
+
+    def __init__(self, transforms: Optional[List[t.AbstractTransform]] = None) -> None:
+        super().__init__()
+        self._transforms = transforms
+
+    __return_type__ = AbstractDataStructure
+
+    @abstractmethod
     def __len__(self) -> int:
-        raise NotImplementedError()
+        ...
+
+    @abstractmethod
+    def __getitem__(self, index: int) -> AbstractDataStructure:
+        ...
+
+    def __index__(self, index: int) -> AbstractDataStructure:
+        return self.__getitem__(index)
+
+    @property
+    def collate_fn(self) -> Callable:
+        return self.__type__.collate_fn
+
+    @property
+    def multiindex(self) -> List[Iterable[int]]:
+        ...
+
+    @multiindex.setter
+    @abstractmethod
+    def multiindex(self) -> None:
+        ...
 
 
 class AbstractDataModule(pl.LightningDataModule):
