@@ -48,21 +48,25 @@ Requirements
 Installation
 ------------
 
-The project environment for {{cookiecutter.friendly_name}} is controlled by `conda` 
-and `poetry`; the former for maintaining the Python environment, as well as additional 
-libraries like CUDA, and the latter for Python specific dependencies. There is
-a bit of overlap between these two tools, however mostly because `conda`
-is not great for resolving dependencies, and `poetry` can't handle things
-that aren't Python (e.g. MPI, MKL).
+The project environment for {{cookiecutter.friendly_name}} combines modern Python
+environment and tooling with flexibility to use more performant, tuned software
+stacks to squeeze extra deep learning performance. For the latter, ``conda`` is 
+recommended, but is not a requirement to run this package as it is also designed
+for continuous development on a variety of environments (i.e. laptops).
 
-The recommended procedure from scratch is to follow these steps:
+Starting from ``conda``:
 
 .. code:: console
 
-   $ conda create -n {{cookiecutter.package_name}} python=3.7
+   $ conda create -n {{cookiecutter.package_name}} python=3.9
    $ conda activate {{cookiecutter.package_name}}
-   $ pip install poetry
-   $ poetry install
+   $ pip install .
+
+For developer installs, run ``pip install './[dev]'``. The idea is that the ``pip``
+installation provides the bare minimum dependencies, however does not guarantee
+performance. It is up to the user to build PyTorch from source in order to include
+things like MPI support, etc.
+
 
 Usage
 -----
