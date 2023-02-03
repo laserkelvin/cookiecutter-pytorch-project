@@ -4,9 +4,9 @@
 {%- endmacro -%}
 {{ heading(cookiecutter.friendly_name) }}
 
-|PyPI| |Status| |Python Version| |License|
+|PyPI| |Status| |Python Version|
 
-|Read the Docs| |Tests| |Codecov|
+|Tests| |Codecov|
 
 |pre-commit| |Black|
 
@@ -19,12 +19,6 @@
 .. |Python Version| image:: https://img.shields.io/pypi/pyversions/{{cookiecutter.project_name}}
    :target: https://pypi.org/project/{{cookiecutter.project_name}}
    :alt: Python Version
-.. |License| image:: https://img.shields.io/pypi/l/{{cookiecutter.project_name}}
-   :target: https://opensource.org/licenses/{{cookiecutter.license}}
-   :alt: License
-.. |Read the Docs| image:: https://img.shields.io/readthedocs/{{cookiecutter.project_name}}/latest.svg?label=Read%20the%20Docs
-   :target: https://{{cookiecutter.project_name}}.readthedocs.io/
-   :alt: Read the documentation at https://{{cookiecutter.project_name}}.readthedocs.io/
 .. |Tests| image:: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/Tests/badge.svg
    :target: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions?workflow=Tests
    :alt: Tests
