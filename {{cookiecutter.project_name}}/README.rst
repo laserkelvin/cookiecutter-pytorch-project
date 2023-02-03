@@ -65,7 +65,8 @@ Starting from ``conda``:
 For developer installs, run ``pip install './[dev]'``. The idea is that the ``pip``
 installation provides the bare minimum dependencies, however does not guarantee
 performance. It is up to the user to build PyTorch from source in order to include
-things like MPI support, etc.
+things like MPI support, etc. The ``environment.yml`` file contains a good starting
+point to do so.
 
 
 Usage
@@ -98,50 +99,18 @@ The project filestructure is laid out as such::
    │   ├── requirements.txt
    │   └── usage.rst
    ├── environment.yml
-   ├── models
    ├── notebooks
    │   ├── dev
    │   ├── exploratory
    │   └── reports
    ├── noxfile.py
-   ├── poetry.lock
    ├── pyproject.toml
    ├── README.rst
    ├── scripts
    │   └── train.py
    └── src
       └── {{cookiecutter.package_name}}
-         ├── __init__.py
-         ├── layers
-         │   ├── __init__.py
-         │   ├── layers.py
-         │   └── tests
-         │       ├── __init__.py
-         │       └── test_layers.py
-         ├── __main__.py
-         ├── models
-         │   ├── __init__.py
-         │   ├── models.py
-         │   └── tests
-         │       ├── __init__.py
-         │       └── test_models.py
-         ├── pipeline
-         │   ├── data.py
-         │   ├── __init__.py
-         │   ├── tests
-         │   │   ├── __init__.py
-         │   │   ├── test_data.py
-         │   │   └── test_transforms.py
-         │   └── transforms.py
-         └── utils.py
-
-A brief summary of what each folder is designed for:
-
-#. `data` contains copies of the data used for this project. It is recommended to form a pipeline whereby the `raw` data is preprocessed, serialized to `interim`, and when ready for analysis, placed into `processed`.
-#. `models` contains serialized weights intended for distribution, and/or testing.
-#. `notebooks` contains three subfolders: `dev` is for notebook based development, `exploratory` for data exploration, and `reports` for making figures and visualizations for writeup.
-#. `scripts` contains files that meant for headless routines, generally those with long compute times such as model training and data cleaning.
-#. `src/{{cookiecutter.package_name}}` contains the common code base for this project.
+         └── __init__.py
 
 
 Code development
@@ -160,8 +129,8 @@ Some concise tenets for development
 * Write unit tests as you go.
 * Commit changes, and commit frequently. Write `semantic`_ git commits!
 * Formatting is done with ``black``; don't fuss about it 😃
-* For new Python dependencies, use `poetry add <package>`.
-* For new environment dependencies, use `conda env export -f environment.yml`.
+* For new Python dependencies, add them to ``pyproject.toml``
+* For new environment dependencies, use `conda env export -f environment.yml` to overwrite.
 
 Notes on best practices, particularly regarding CI/CD, can be found in the extensive
 documentation for the `Hypermodern Python Cookiecutter`_ repository.
