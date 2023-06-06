@@ -8,6 +8,7 @@ This implements a registry pattern, which provides a singular interface
 to access classes defined all over the package.
 """
 
+
 class Registry:
 
     _LAYERS = {}
@@ -21,6 +22,7 @@ class Registry:
         def wrapper(_class: Type) -> Type:
             cls._MODELS[name] = _class
             return _class
+
         return wrapper
 
     @classmethod
@@ -28,6 +30,7 @@ class Registry:
         def wrapper(_class: Type) -> Type:
             cls._LAYERS[name] = _class
             return _class
+
         return wrapper
 
     @classmethod
@@ -35,6 +38,7 @@ class Registry:
         def wrapper(_class: Type) -> Type:
             cls._TASKS[name] = _class
             return _class
+
         return wrapper
 
     @classmethod
@@ -42,6 +46,7 @@ class Registry:
         def wrapper(_class: Type) -> Type:
             cls._DATA[name] = _class
             return _class
+
         return wrapper
 
     @classmethod
@@ -49,15 +54,23 @@ class Registry:
         def wrapper(_class: Type) -> Type:
             cls._TRANSFORMS[name] = _class
             return _class
+
         return wrapper
 
     @lru_cache()
     def get(self, name: str) -> Union[Type, None]:
-        for category in [self._LAYERS, self._MODELS, self._TASKS, self._DATA, self._TRANSFORMS]:
+        for category in [
+            self._LAYERS,
+            self._MODELS,
+            self._TASKS,
+            self._DATA,
+            self._TRANSFORMS,
+        ]:
             for key, value in category.items():
                 if name == key:
                     return value
         raise KeyError(f"{name} was requested from the registry, but cannot be found.")
+
 
 # instantiate registry object to track everything
 registry = Registry()
