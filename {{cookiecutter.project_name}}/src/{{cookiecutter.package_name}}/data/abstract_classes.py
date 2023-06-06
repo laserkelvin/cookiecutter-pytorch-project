@@ -9,6 +9,7 @@ and `Dataset` definitions.
 from abc import abstractmethod, abstractstaticmethod
 from os import environ
 from typing import Iterable, List, Optional, Type, Union
+from pathlib import Path
 
 import pytorch_lightning as pl
 import torch
@@ -23,11 +24,22 @@ class AbstractDataset(Dataset):
     Provides a template for dataset abstraction.
     """
 
-    def __init__(self, transforms: Optional[List[t.AbstractTransform]] = None) -> None:
+    def __init__(self, data_path: Union[str, Path], transforms: Optional[List[t.AbstractTransform]] = None) -> None:
         super().__init__()
         self._transforms = transforms
 
     __return_type__ = AbstractDataStructure
+
+    @property
+    def data_path(self) -> Path:
+        return self._data_path
+
+    @data_path.setter
+    def data_path(self, value: Union[str, Path]) -> None:
+        if isinstance(value, str):
+            value = Path(value)
+        assert value.exists(), f"Data path provided does not exist: {value}"
+        self._data_path = value
 
     @abstractmethod
     def __len__(self) -> int:
