@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod 
 
 from {{cookiecutter.package_name}}.common.classes import AbstractDataStructure
+from {{cookiecutter.package_name}} import registry
 
 
 class AbstractTransform(ABC):
