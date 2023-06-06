@@ -6,15 +6,14 @@ This module is intended for dataset abstractions,
 comprising data generation, I/O, and `DataModule`
 and `Dataset` definitions.
 """
-from abc import abstractmethod
+from abc import abstractmethod, abstractstaticmethod
 from os import environ
-from typing import Callable, Iterable, List, Optional, Type, Union
+from typing import Iterable, List, Optional, Type, Union
 
 import pytorch_lightning as pl
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
 
-from {{cookiecutter.package_name}} import get_paths
 from {{cookiecutter.package_name}}.pipeline import transforms as t
 from {{cookiecutter.package_name}}.common.classes import AbstractDataStructure
 
@@ -41,9 +40,9 @@ class AbstractDataset(Dataset):
     def __index__(self, index: int) -> AbstractDataStructure:
         return self.__getitem__(index)
 
-    @property
-    def collate_fn(self) -> Callable:
-        return self.__type__.collate_fn
+    @abstractstaticmethod
+    def collate_fn(*args, **kwargs):
+        ...
 
     @property
     def multiindex(self) -> List[Iterable[int]]:
