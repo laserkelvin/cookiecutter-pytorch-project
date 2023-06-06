@@ -1,111 +1,93 @@
 from __future__ import annotations
+from typing import Optional, Union, Dict, List, Any
 
-from abc import ABC, abstractproperty, abstractstaticmethod
-from dataclasses import dataclass
-from typing import Any, Iterable, Optional
-
+import torch
 from torch import Tensor
+import numpy as np
+
+from {{cookiecutter.package_name}}.common.types import DataType
 
 
-@dataclass
-class AbstractDataStructure(ABC):
-    """
-    Implements an abstract data structure, which is intended to
-    be used to form a schema for expected key/data maps, with
-    scalability from single samples to batches.
-
-    This is intended to be used for everything from batched
-    data to predictions.
-
-    When you have concrete data, implement a subclass that
-    inherits from `AbstractDataStructure` that includes all
-    the key/data values you would expect.
-    """
-
-    def __getitem__(self, key: str, default: Optional[Any] = None) -> Any:
-        return getattr(self, key, default)
-
-    def __setitem__(self, key: str, value: Any):
-        setattr(self, key, value)
-
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
-        """
-        User facing method for retrieving data, mimicking how dictionaries
-        function.
-
-        Parameters
-        ----------
-        key : str
-            Key to retrieve from the structure.
-        default : Optional[Any]
-            Optional value to set as the default, if the key
-            exists but doesn't contain data.
-
-        Returns
-        -------
-        Any
-            Data to be retrieved
-
-        Raises
-        ------
-        KeyError:
-            If `key` is not an attribute of this data structure.
-        """
-        if key not in dir(self):
-            raise KeyError(f"{key} is not found in {self.__class__.__name__}.")
-        return self.__getitem__(key, default)
+class DataStructure(object):
+    def __init__(
+        self,
+        inputs: Optional[Dict[str, DataType]] = None,
+        targets: Optional[Dict[str, DataType]] = None,
+        **kwargs,
+    ) -> None:
+        self.inputs = inputs
+        self.targets = targets
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.keys = list(sorted(kwargs.keys()))
 
     @property
-    def is_batched(self) -> bool:
-        return self.batch_size > 1
+    def inputs(self) -> Dict[str, DataType]:
+        return self._inputs
 
-    @abstractstaticmethod
-    def collate_fn(batch: Iterable[AbstractDataStructure]) -> AbstractDataStructure:
-        """
-        Function to collate samples together into a batch.
-
-        Parameters
-        ----------
-        batch
-            A collection of individual samples that will
-            be collated together.
-
-        Returns
-        -------
-        AbstractBatch
-
-        """
-        ...
-
-    @abstractproperty
-    def batch_size(self) -> int:
-        """
-        Return the batch size.
-
-        Returns
-        -------
-        int
-            Number of samples within the batch.
-        """
-        ...
+    @inputs.setter
+    def inputs(self, data: Union[None, Dict[str, DataType]]) -> None:
+        if not data:
+            data = {}
+        self._inputs = data
 
     @property
-    def is_not_finite(self) -> bool:
-        """
-        Convenient property to check if any tensors
-        contained within this data structure has inf
-        and/or nans.
+    def targets(self) -> Dict[str, DataType]:
+        return self._targets
 
-        Returns
-        -------
-        bool
-            True if there are any elements within the
-            structure that is not finite, else False.
-        """
-        for key in dir(self):
-            attr = self.get(key)
-            if isinstance(attr, Tensor):
-                has_na = ~attr.isfinite().any()
-                if has_na:
-                    return True
-        return False
+    @targets.setter
+    def targets(self, data: Union[None, Dict[str, DataType]]) -> None:
+        if not data:
+            data = {}
+        self._targets = data
+
+
+def collate_nested_data(data: List[Any]) -> Union[Tensor, List[str], Dict[str, Tensor]]:
+    """
+    Converts arrays of structs to a struct of arrays.
+
+    Basically aggregates elements within a list of data into packed
+    data structures, preferably `torch.Tensor`s. Currently, the
+    function can operate on dictionaries (recursively), tensors,
+
+    Parameters
+    ----------
+    data : List[Any]
+        List of data to collate
+
+    Returns
+    -------
+    Union[Tensor, List[str], Dict[str, Tensor]]
+    """
+    sample = data[0]
+    # for data contained in dictionaries, this function is applied recursively
+    if isinstance(sample, dict):
+        result = {}
+        for key in sample.keys():
+            result[key] = collate_nested_data([s[key] for s in data])
+    # for tensors, try and stack them together if they have the same shapes
+    elif isinstance(sample, Tensor):
+        # assumes batch first
+        assert (
+            len(set([d.shape for d in data])) == 1
+        ), f"Tensor shapes are irregular and cannot be stacked; please implement a padding function."
+        result = torch.vstack(data)
+    elif isinstance(sample, np.ndarray):
+        assert (
+            len(set([d.shape for d in data])) == 1
+        ), f"NDArray shapes are irregular and cannot be stacked; please implement a padding function."
+        result = torch.from_numpy(np.vstack(data))
+    elif isinstance(sample, (float, int)):
+        # check if every entry is an integer, and if so, we make sure tensor is cast appropriately
+        all_ints = all([float(d).is_integer() for d in data])
+        result = torch.tensor(data)
+        if all_ints:
+            result = result.long()
+    # just copy over strings
+    elif isinstance(sample, str):
+        result = data
+    else:
+        raise NotImplementedError(
+            f"Trying to collate data of unsupported type: {type(sample)}, value {sample}"
+        )
+    return result
