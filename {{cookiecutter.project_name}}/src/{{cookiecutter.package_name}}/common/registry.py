@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Type
+from typing import Type, Union
+from functools import lru_cache
 
 
 """
@@ -49,6 +50,14 @@ class Registry:
             cls._TRANSFORMS[name] = _class
             return _class
         return wrapper
+
+    @lru_cache()
+    def get(self, name: str) -> Union[Type, None]:
+        for category in [self._LAYERS, self._MODELS, self._TASKS, self._DATA, self._TRANSFORMS]:
+            for key, value in category.items():
+                if name == key:
+                    return value
+        raise KeyError(f"{name} was requested from the registry, but cannot be found.")
 
 # instantiate registry object to track everything
 registry = Registry()
