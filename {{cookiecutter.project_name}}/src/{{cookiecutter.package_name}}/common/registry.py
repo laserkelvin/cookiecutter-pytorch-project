@@ -13,6 +13,7 @@ class Registry:
     _MODELS = {}
     _TASKS = {}
     _DATA = {}
+    _TRANSFORMS = {}
 
     @classmethod
     def register_model(cls: Type[Registry], name: str):
@@ -42,6 +43,12 @@ class Registry:
             return _class
         return wrapper
 
+    @classmethod
+    def register_transform(cls: Type[Registry], name: str):
+        def wrapper(_class: Type) -> Type:
+            cls._TRANSFORMS[name] = _class
+            return _class
+        return wrapper
 
 # instantiate registry object to track everything
 registry = Registry()
