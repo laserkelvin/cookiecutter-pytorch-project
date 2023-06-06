@@ -1,5 +1,5 @@
 
-from typing import Dict, Type
+from typing import Dict
 from pathlib import Path
 
 
@@ -7,7 +7,7 @@ src_path = Path(__file__)
 top = src_path.parents[1].absolute()
 
 
-def get_paths() -> Dict[str, Type[Path]]:
+def get_paths() -> Dict[str, Path]:
     """
     Retrieve a dictionary containing the absolute paths
     for this project. This provides a simple method for
