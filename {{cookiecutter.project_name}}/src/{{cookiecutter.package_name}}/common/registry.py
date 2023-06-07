@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Type, Union
 from functools import lru_cache
 
+from torch import nn
+
 
 """
 This implements a registry pattern, which provides a singular interface
@@ -16,6 +18,12 @@ class Registry:
     _TASKS = {}
     _DATA = {}
     _TRANSFORMS = {}
+
+    # add all of nn into _LAYERS for easy access
+    for key in dir(nn):
+        ref = getattr(nn, key)
+        if isinstance(ref, Type) and issubclass(ref, nn.Module):
+            _LAYERS[key] = ref
 
     @classmethod
     def register_model(cls: Type[Registry], name: str):
